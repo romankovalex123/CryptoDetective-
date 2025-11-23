@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Отдел Расследований{% endblock %}
+
+{% block content %}
+<div style="text-align: center; margin-bottom: 50px;">
+    <h1>🕵️‍♂️ Криптографический Детектив</h1>
+    <p style="margin-bottom: 30px; color: #aaa;">
+        Архив реальных расследований. Когда математика сталкивается с человеческими ошибками.
+    </p>
+</div>
+
+<div class="grid-container">
+    {% for id, story in stories.items() %}
+    <div class="card" style="margin: 0; display: flex; flex-direction: column; justify-content: space-between; border-left: 4px solid var(--highlight);">
+        <div>
+            <h3>{{ story.title }}</h3>
+            <p style="color: var(--accent-leaf); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; margin-bottom: 10px;">
+                Сложность: {{ story.difficulty }}
+            </p>
+            <p style="font-size: 0.95rem; color: #ccc;">{{ story.summary }}</p>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <a href="{{ url_for('story', story_id=id) }}" class="btn" style="width: 100%; text-align: center; box-sizing: border-box;">
+                Открыть дело №{{ id }}
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

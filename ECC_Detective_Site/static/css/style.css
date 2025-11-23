@@ -1,0 +1,141 @@
+/* static/css/style.css */
+
+:root {
+    --bg-color: #1A1A24;       /* Глубокий темный (почти черный) */
+    --card-bg: #252535;        /* Фон карточек */
+    --text-main: #E0E0E0;      /* Основной текст */
+    --accent-flower: #9D84B0;  /* Приглушенный лавандовый */
+    --accent-leaf: #6E8A7F;    /* Приглушенный шалфей (зеленый) */
+    --highlight: #D4A5A5;      /* Пыльная роза */
+    --gold-secret: #C5A059;    /* Тусклое золото для секретов */
+}
+
+body {
+    font-family: 'Georgia', 'Times New Roman', serif; /* Засечки для "книжного" стиля */
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    line-height: 1.7;
+
+    /* --- ЦВЕТОЧНЫЙ ФОН --- */
+    /* Укажите путь к вашей картинке. Overlay делает её темной и ненавязчивой */
+    background-image: url('../images/flower_pattern.png');
+    background-repeat: repeat;
+    background-size: 150px;
+    background-blend-mode: overlay; /* Смешивание с серым фоном */
+    background-color: rgba(26, 26, 36, 0.97); /* Сильное затемнение поверх картинки */
+}
+
+/* Навигация */
+nav {
+    background: rgba(15, 15, 20, 0.95);
+    padding: 1.2rem 2rem;
+    border-bottom: 1px solid var(--accent-leaf);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+nav .logo {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: var(--highlight);
+    letter-spacing: 1px;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+    margin: 0;
+    padding: 0;
+}
+
+nav a {
+    color: var(--text-main);
+    text-decoration: none;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 1rem;
+    transition: color 0.3s;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+nav a:hover {
+    color: var(--accent-flower);
+}
+
+/* Контейнер */
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* Карточки */
+.card {
+    background-color: var(--card-bg);
+    border-radius: 4px; /* Более строгие углы */
+    padding: 30px;
+    margin-bottom: 30px;
+    border-left: 3px solid var(--accent-flower);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+h1, h2, h3 {
+    color: var(--highlight);
+    margin-top: 0;
+}
+
+h1 { font-size: 2.5rem; border-bottom: 1px solid #444; padding-bottom: 15px; }
+
+/* Кнопки */
+.btn {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 12px 25px;
+    background-color: var(--accent-leaf);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 2px;
+    font-family: 'Segoe UI', sans-serif;
+    transition: background 0.3s;
+}
+
+.btn:hover {
+    background-color: var(--accent-flower);
+}
+
+/* Блок для формул */
+.math-block {
+    background: #111;
+    padding: 20px;
+    border: 1px solid #333;
+    color: #76ff03; /* Хакерский зеленый */
+    font-family: 'Courier New', monospace;
+    margin: 20px 0;
+    text-align: center;
+}
+
+/* Grid для списка */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+}
+
+/* Футер */
+footer {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-size: 0.9rem;
+    border-top: 1px solid #333;
+    margin-top: 50px;
+}

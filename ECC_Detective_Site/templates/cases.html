@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Неочевидные Сферы{% endblock %}
+
+{% block content %}
+<div style="text-align: center; margin-bottom: 50px;">
+    <h1>ЭК: За пределами криптовалют</h1>
+    <p style="color: #aaa; font-size: 1.1rem;">
+        Мы привыкли видеть криптографию в банках и блокчейне. <br>
+        Но эллиптические кривые уже защищают космос, квантовые метки и нашу анонимность.
+    </p>
+</div>
+
+<div class="cases-grid">
+    {% for case in cases %}
+    <div class="card case-card">
+        <h3 style="color: var(--highlight); margin-top: 0; border-bottom: 1px solid #444; padding-bottom: 15px; margin-bottom: 20px;">
+            {{ case.title }}
+        </h3>
+
+        <div style="margin-bottom: 15px;">
+            <span style="color: var(--accent-flower); font-weight: bold; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;">
+                🔍 Суть применения
+            </span>
+
+
+[Image of Zero-Knowledge Proof general concept]
+
+            <p style="margin-top: 5px;">{{ case.essence }}</p>
+        </div>
+
+        <div style="margin-bottom: 15px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 4px; border-left: 2px solid var(--accent-leaf);">
+            <span style="color: var(--accent-leaf); font-weight: bold; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;">
+                📝 Конкретный пример
+            </span>
+            <p style="margin-top: 5px; font-size: 0.95rem;">{{ case.example }}</p>
+        </div>
+
+        <div>
+            <span style="color: #D4A5A5; font-weight: bold; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;">
+                💡 Почему это неочевидно
+            </span>
+            <p style="margin-top: 5px; font-style: italic; color: #ccc;">{{ case.unobvious }}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+    .cases-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+    }
+
+    .case-card {
+        background: rgba(37, 37, 53, 0.9);
+        transition: transform 0.3s;
+    }
+
+    .case-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+    }
+</style>
+{% endblock %}
