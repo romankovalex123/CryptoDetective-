@@ -1,37 +1,39 @@
 /* static/css/style.css */
 
 :root {
-    --bg-color: #1A1A24;       /* Глубокий темный (почти черный) */
-    --card-bg: #252535;        /* Фон карточек */
-    --text-main: #E0E0E0;      /* Основной текст */
-    --accent-flower: #9D84B0;  /* Приглушенный лавандовый */
-    --accent-leaf: #6E8A7F;    /* Приглушенный шалфей (зеленый) */
-    --highlight: #D4A5A5;      /* Пыльная роза */
-    --gold-secret: #C5A059;    /* Тусклое золото для секретов */
+    --bg-color: #1A1A24;
+    --card-bg: #252535;
+    --text-main: #E0E0E0;
+    --accent-flower: #9D84B0;  /* Лавандовый */
+    --accent-leaf: #6E8A7F;    /* Шалфей */
+    --highlight: #D4A5A5;      /* Розовый акцент */
+    --gold-secret: #C5A059;    /* Золото */
+    --success: #4CAF50;        /* Зеленый */
+    --error: #F44336;          /* Красный */
 }
 
 body {
-    font-family: 'Georgia', 'Times New Roman', serif; /* Засечки для "книжного" стиля */
+    font-family: 'Georgia', 'Times New Roman', serif;
     background-color: var(--bg-color);
     color: var(--text-main);
     margin: 0;
     padding: 0;
     min-height: 100vh;
-    line-height: 1.7;
+    line-height: 1.8;
+    font-size: 19px;
 
-    /* --- ЦВЕТОЧНЫЙ ФОН --- */
-    /* Укажите путь к вашей картинке. Overlay делает её темной и ненавязчивой */
+    /* Цветочный фон */
     background-image: url('../images/flower_pattern.png');
     background-repeat: repeat;
     background-size: 150px;
-    background-blend-mode: overlay; /* Смешивание с серым фоном */
-    background-color: rgba(26, 26, 36, 0.97); /* Сильное затемнение поверх картинки */
+    background-blend-mode: overlay;
+    background-color: rgba(26, 26, 36, 0.97);
 }
 
 /* Навигация */
 nav {
-    background: rgba(15, 15, 20, 0.95);
-    padding: 1.2rem 2rem;
+    background: rgba(15, 15, 20, 0.98);
+    padding: 1.5rem 2rem;
     border-bottom: 1px solid var(--accent-leaf);
     display: flex;
     justify-content: space-between;
@@ -42,7 +44,7 @@ nav {
 }
 
 nav .logo {
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     font-weight: bold;
     color: var(--highlight);
     letter-spacing: 1px;
@@ -51,7 +53,7 @@ nav .logo {
 nav ul {
     list-style: none;
     display: flex;
-    gap: 25px;
+    gap: 30px;
     margin: 0;
     padding: 0;
 }
@@ -60,10 +62,9 @@ nav a {
     color: var(--text-main);
     text-decoration: none;
     font-family: 'Segoe UI', sans-serif;
-    font-size: 1rem;
+    font-size: 1.1rem;
     transition: color 0.3s;
     text-transform: uppercase;
-    font-size: 0.9rem;
     letter-spacing: 1px;
 }
 
@@ -73,69 +74,111 @@ nav a:hover {
 
 /* Контейнер */
 .container {
-    max-width: 900px;
-    margin: 40px auto;
+    max-width: 960px;
+    margin: 50px auto;
     padding: 0 20px;
 }
 
 /* Карточки */
 .card {
     background-color: var(--card-bg);
-    border-radius: 4px; /* Более строгие углы */
-    padding: 30px;
-    margin-bottom: 30px;
-    border-left: 3px solid var(--accent-flower);
+    border-radius: 8px;
+    padding: 40px;
+    margin-bottom: 40px;
+    border-left: 5px solid var(--accent-flower);
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
 
 h1, h2, h3 {
     color: var(--highlight);
     margin-top: 0;
+    line-height: 1.3;
 }
 
-h1 { font-size: 2.5rem; border-bottom: 1px solid #444; padding-bottom: 15px; }
+h1 { font-size: 3rem; border-bottom: 1px solid #444; padding-bottom: 20px; }
+h2 { font-size: 2.2rem; }
+h3 { font-size: 1.6rem; }
 
-/* Кнопки */
 .btn {
     display: inline-block;
-    margin-top: 15px;
-    padding: 12px 25px;
+    margin-top: 20px;
+    padding: 15px 30px;
     background-color: var(--accent-leaf);
     color: #fff;
     text-decoration: none;
-    border-radius: 2px;
+    border-radius: 4px;
     font-family: 'Segoe UI', sans-serif;
-    transition: background 0.3s;
+    font-weight: bold;
+    font-size: 1.1rem;
+    transition: background 0.3s, transform 0.2s;
+    cursor: pointer;
+    border: none;
 }
 
 .btn:hover {
     background-color: var(--accent-flower);
+    transform: translateY(-2px);
 }
 
-/* Блок для формул */
 .math-block {
     background: #111;
-    padding: 20px;
+    padding: 25px;
     border: 1px solid #333;
-    color: #76ff03; /* Хакерский зеленый */
+    color: #76ff03;
     font-family: 'Courier New', monospace;
-    margin: 20px 0;
+    font-size: 1.2rem;
+    margin: 25px 0;
     text-align: center;
+    border-radius: 6px;
 }
 
-/* Grid для списка */
+/* Стили для практики */
+.practice-input {
+    width: 100%;
+    padding: 15px;
+    margin-top: 15px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid #555;
+    color: white;
+    font-size: 1.1rem;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.practice-feedback {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 4px;
+    font-weight: bold;
+    display: none;
+}
+
+.feedback-correct {
+    background: rgba(76, 175, 80, 0.2);
+    border: 1px solid var(--success);
+    color: #81c784;
+    display: block;
+}
+
+.feedback-incorrect {
+    background: rgba(244, 67, 54, 0.2);
+    border: 1px solid var(--error);
+    color: #e57373;
+    display: block;
+}
+
+/* Сетка файлов для фактов */
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
 }
 
-/* Футер */
 footer {
     text-align: center;
-    padding: 40px;
-    color: #666;
-    font-size: 0.9rem;
+    padding: 50px;
+    color: #777;
+    font-size: 1rem;
     border-top: 1px solid #333;
-    margin-top: 50px;
+    margin-top: 80px;
 }
