@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Лаборатория{% endblock %}
+
+{% block content %}
+<div style="text-align: center; margin-bottom: 60px;">
+    <h1>🧪 Практическая Лаборатория</h1>
+    <p style="font-size: 1.3rem; color: #aaa;">
+        Теория без практики мертва. Попробуйте свои силы.
+    </p>
+</div>
+
+<div class="container">
+    {% for task in tasks %}
+    <div class="card" id="task-card-{{ task.id }}">
+        <h2>Задача #{{ task.id }}: {{ task.title }}</h2>
+
+        <div style="font-size: 1.2rem; margin-bottom: 20px;">
+            {{ task.desc | safe }}
+        </div>
+
+        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-left: 3px solid #777; font-style: italic; font-size: 1rem; color: #ccc; margin-bottom: 20px;">
+            💡 Подсказка: {{ task.hint }}
+        </div>
+
+        <input type="text" id="input-{{ task.id }}" class="practice-input" placeholder="Введите ответ...">
+
+        <div id="feedback-{{ task.id }}" class="practice-feedback"></div>
+
+        <button onclick="checkAnswer({{ task.id }}, '{{ task.answer }}')" class="btn">Проверить ответ</button>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+    function checkAnswer(id, correctAnswer) {
+        let inputField = document.getElementById('input-' + id);
+        let feedback = document.getElementById('feedback-' + id);
+
+        if (!inputField || !feedback) return;
+
+        let input = inputField.value.trim().toUpperCase();
+
+        if (input === correctAnswer.toUpperCase()) {
+            feedback.innerHTML = "✅ Верно! Доступ получен.";
+            feedback.className = "practice-feedback feedback-correct";
+        } else {
+            feedback.innerHTML = "❌ Неверно. Попробуйте еще раз.";
+            feedback.className = "practice-feedback feedback-incorrect";
+        }
+        feedback.style.display = 'block';
+    }
+</script>
+{% endblock %}
