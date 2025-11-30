@@ -3,11 +3,10 @@
 {% block title %}Неочевидные Сферы{% endblock %}
 
 {% block content %}
-<div style="text-align: center; margin-bottom: 50px;">
-    <h1>ЭК: За пределами криптовалют</h1>
-    <p style="color: #aaa; font-size: 1.1rem;">
-        Мы привыкли видеть криптографию в банках и блокчейне. <br>
-        Но эллиптические кривые уже защищают космос, квантовые метки и нашу анонимность.
+<div style="text-align: center; margin-bottom: 60px;">
+    <h1>🗂️ Сферы Применения</h1>
+    <p style="font-size: 1.3rem; color: #aaa;">
+        Криптография существует далеко за пределами биткоина и VPN.
     </p>
 </div>
 
@@ -22,10 +21,6 @@
             <span style="color: var(--accent-flower); font-weight: bold; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;">
                 🔍 Суть применения
             </span>
-
-
-[Image of Zero-Knowledge Proof general concept]
-
             <p style="margin-top: 5px;">{{ case.essence }}</p>
         </div>
 
@@ -51,16 +46,6 @@
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
         gap: 30px;
-    }
-
-    .case-card {
-        background: rgba(37, 37, 53, 0.9);
-        transition: transform 0.3s;
-    }
-
-    .case-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.4);
     }
 </style>
 {% endblock %}
