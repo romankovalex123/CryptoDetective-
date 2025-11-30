@@ -10,12 +10,14 @@
 </head>
 <body>
     <nav>
-        <div class="logo">🥀 EllipticMystery</div>
+        <div class="logo">🔐 CryptoDetective</div>
         <ul>
-            <li><a href="{{ url_for('index') }}">Теория</a></li>
+            <li><a href="{{ url_for('index') }}">Главная</a></li>
             <li><a href="{{ url_for('cases') }}">Сферы</a></li>
-            <li><a href="{{ url_for('detective') }}">🕵️ Расследования</a></li>
-            <li><a href="{{ url_for('facts') }}" style="color: #D4A5A5;">🔒 Секреты</a></li>
+            <li><a href="{{ url_for('detective') }}">Детектив</a></li>
+            <!-- Ссылка нормального цвета (убран inline style color) -->
+            <li><a href="{{ url_for('practice') }}" style="color: var(--accent-leaf);">Лаборатория</a></li>
+            <li><a href="{{ url_for('facts') }}" style="color: var(--highlight);">Секреты</a></li>
         </ul>
     </nav>
 
@@ -24,7 +26,7 @@
     </div>
 
     <footer>
-        <p>Написано на Python. Исследовано людьми. <br> Охота за уязвимостями продолжается.</p>
+        <p>Криптография защищает каждого. <br> Изучай, чтобы понимать.</p>
     </footer>
 </body>
 </html>
