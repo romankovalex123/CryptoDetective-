@@ -14,7 +14,6 @@
 
 <div class="dossier-container">
     {% for category, files in dossier.items() %}
-
         <h2 style="color: var(--accent-leaf); margin-top: 60px; margin-bottom: 20px; border-bottom: 1px dashed #555; padding-bottom: 10px; font-size: 1.5rem;">
             {{ category }}
         </h2>
@@ -29,9 +28,7 @@
                         <div class="file-status">{{ file.status }}</div>
                     </div>
                 </div>
-
                 <hr style="border: 0; border-top: 1px solid #444; margin: 15px 0;">
-
                 <div class="file-content">
                     {{ file.content | safe }}
                 </div>
@@ -44,54 +41,13 @@
 <style>
     .file-card {
         border-left: 4px solid var(--gold-secret);
-        transition: transform 0.3s, box-shadow 0.3s;
         background: rgba(30, 30, 40, 0.85);
         display: flex;
         flex-direction: column;
     }
-
-    .file-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(197, 160, 89, 0.15);
-        background: rgba(35, 35, 45, 0.95);
-    }
-
-    .file-header {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
-
-    .file-name {
-        font-family: 'Courier New', monospace;
-        font-weight: bold;
-        color: var(--text-main);
-        font-size: 1.1rem;
-        word-break: break-all; /* Чтобы длинные имена файлов переносились */
-    }
-
-    .file-status {
-        font-size: 0.8rem;
-        color: #ff5555; /* Красный штамп */
-        font-weight: bold;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        margin-top: 5px;
-    }
-
-    .file-content {
-        flex-grow: 1;
-    }
-
-    .file-content p {
-        font-size: 0.95rem;
-        color: #ccc;
-        margin-bottom: 10px;
-        line-height: 1.6;
-    }
-
-    .file-content strong {
-        color: var(--gold-secret);
-    }
+    .file-header { display: flex; align-items: center; gap: 15px; }
+    .file-name { font-family: 'Courier New', monospace; font-weight: bold; color: var(--text-main); font-size: 1.1rem; }
+    .file-status { font-size: 0.8rem; color: #ff5555; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; margin-top: 5px; }
+    .file-content p { font-size: 0.95rem; color: #ccc; margin-bottom: 10px; }
 </style>
 {% endblock %}
