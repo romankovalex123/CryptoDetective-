@@ -1,54 +1,629 @@
 {% extends "base.html" %}
 
-{% block title %}Лаборатория{% endblock %}
+{% block title %}Лаборатория: ECDH и ECDSA{% endblock %}
 
 {% block content %}
 <div style="text-align: center; margin-bottom: 60px;">
     <h1>🧪 Практическая Лаборатория</h1>
     <p style="font-size: 1.3rem; color: #aaa;">
-        Теория без практики мертва. Попробуйте свои силы.
+        Инструменты для исследования свойств кривых и симуляции криптографических протоколов.
     </p>
 </div>
 
-<div class="container">
-    {% for task in tasks %}
-    <div class="card" id="task-card-{{ task.id }}">
-        <h2>Задача #{{ task.id }}: {{ task.title }}</h2>
-
-        <div style="font-size: 1.2rem; margin-bottom: 20px;">
-            {{ task.desc | safe }}
-        </div>
-
-        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-left: 3px solid #777; font-style: italic; font-size: 1rem; color: #ccc; margin-bottom: 20px;">
-            💡 Подсказка: {{ task.hint }}
-        </div>
-
-        <input type="text" id="input-{{ task.id }}" class="practice-input" placeholder="Введите ответ...">
-
-        <div id="feedback-{{ task.id }}" class="practice-feedback"></div>
-
-        <button onclick="checkAnswer({{ task.id }}, '{{ task.answer }}')" class="btn">Проверить ответ</button>
+<!-- ------------------ ИНТЕРАКТИВНЫЙ ХОЛСТ (ВОЗВРАТ) ------------------ -->
+<div class="card" style="border-left-color: var(--accent-flower);">
+    <h2>1. Интерактивный Холст: Сложение Точек (P + Q)</h2>
+    <p>Изучите геометрическую операцию сложения точек на эллиптической кривой. Это основа всего ECC.</p>
+    <div class="math-block" style="margin-top: 10px;">
+        $$ y^2 = x^3 + ax + b $$
     </div>
-    {% endfor %}
+
+    <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px;">
+        <div style="flex: 1;">
+            <label style="color: var(--accent-flower);">Коэффициент a: <span id="valA"></span></label>
+            <input type="range" id="paramA" min="-5" max="5" step="0.5" value="-2" style="width: 100%;">
+        </div>
+        <div style="flex: 1;">
+            <label style="color: var(--accent-flower);">Коэффициент b: <span id="valB"></span></label>
+            <input type="range" id="paramB" min="-5" max="5" step="0.5" value="2" style="width: 100%;">
+        </div>
+    </div>
+
+    <canvas id="eccCanvas" width="800" height="500" style="width: 100%; border: 1px solid #555; background: #fff; cursor: crosshair;"></canvas>
+
+    <div class="interactive-panel">
+        <p id="statusMsg" style="color: var(--highlight);">Нажмите на кривую, чтобы выбрать точку P. Затем нажмите для выбора точки Q.</p>
+        <div style="margin-top: 10px; font-family: monospace;">
+            P: <span id="pointP" style="color: var(--accent-flower);">(?, ?)</span> |
+            Q: <span id="pointQ" style="color: var(--accent-leaf);">(?, ?)</span> |
+            R (P+Q): <span id="pointR" style="color: #F44336;">(?, ?)</span>
+        </div>
+        <button onclick="resetCanvas()" class="btn" style="background: var(--error); margin-top: 10px;">Сброс</button>
+    </div>
+</div>
+
+<!-- ------------------ СИМУЛЯТОР ECDH ------------------ -->
+<div class="card" style="border-left-color: var(--accent-leaf);">
+    <h2>2. ECDH: Обмен Ключами Диффи-Хеллмана на ЭК</h2>
+    <p>Протокол, позволяющий Алисе и Бобу создать общий секретный ключ по открытому каналу.</p>
+    <div class="math-block">
+        $$\text{Общий ключ} = \text{Приватный ключ Алисы} \cdot \text{Публичный ключ Боба}$$
+        $$\text{Общий ключ} = \text{Приватный ключ Боба} \cdot \text{Публичный ключ Алисы}$$
+    </div>
+    <p style="color: var(--accent-flower);">* Используется простая кривая для демонстрации: $y^2 = x^3 + 2x + 1 \pmod{17}$. Базовая точка $G(5, 1)$</p>
+
+    <div class="interactive-panel">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <!-- Алиса -->
+            <div>
+                <h3>Алиса (Alice)</h3>
+                <div class="input-group">
+                    <label for="alicePrivate">Приватный ключ $d_A$ (число 1..16):</label>
+                    <input type="number" id="alicePrivate" value="10" min="1" max="16">
+                    <button onclick="generateKeys('A')" class="btn" style="background: var(--accent-flower);">Генерировать ключи</button>
+                </div>
+                <div class="result-box" id="alicePublic">Публичный ключ $P_A$:</div>
+            </div>
+            <!-- Боб -->
+            <div>
+                <h3>Боб (Bob)</h3>
+                <div class="input-group">
+                    <label for="bobPrivate">Приватный ключ $d_B$ (число 1..16):</label>
+                    <input type="number" id="bobPrivate" value="7" min="1" max="16">
+                    <button onclick="generateKeys('B')" class="btn" style="background: var(--accent-flower);">Генерировать ключи</button>
+                </div>
+                <div class="result-box" id="bobPublic">Публичный ключ $P_B$:</div>
+            </div>
+        </div>
+
+        <button onclick="calculateSharedSecret()" class="btn" style="width: 100%; margin-top: 20px; background: var(--success);">
+            4. Вычислить Общий Секрет (K)
+        </button>
+        <div class="result-box success" id="sharedSecret"></div>
+    </div>
+</div>
+
+<!-- ------------------ СИМУЛЯТОР ECDSA ------------------ -->
+<div class="card" style="border-left-color: var(--highlight);">
+    <h2>3. ECDSA: Цифровая Подпись</h2>
+    <p>Создание и проверка подписи для сообщения, гарантирующее его подлинность и целостность.</p>
+
+    <div class="interactive-panel">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <!-- Подписание (Алиса) -->
+            <div>
+                <h3>Подписание (Алиса)</h3>
+                <div class="input-group">
+                    <label for="ecdsaPrivate">Приватный ключ $d_A$ (1..16):</label>
+                    <input type="number" id="ecdsaPrivate" value="10" min="1" max="16">
+                    <label for="message">Сообщение (Message):</label>
+                    <textarea id="message" rows="2">Тайное послание для Боба.</textarea>
+                    <button onclick="generateSignature()" class="btn" style="background: var(--accent-flower);">Создать подпись (r, s)</button>
+                </div>
+                <div class="result-box" id="signatureResult"></div>
+            </div>
+            <!-- Проверка (Боб) -->
+            <div>
+                <h3>Проверка (Боб)</h3>
+                <div class="input-group">
+                    <label for="ecdsaPublic">Публичный ключ $P_A$ (для проверки):</label>
+                    <input type="text" id="ecdsaPublic" placeholder="PA(x, y)" disabled>
+                    <label for="verifyR">r (Подпись R):</label>
+                    <input type="text" id="verifyR" placeholder="r">
+                    <label for="verifyS">s (Подпись S):</label>
+                    <input type="text" id="verifyS" placeholder="s">
+                    <button onclick="verifySignature()" class="btn" style="background: var(--accent-leaf);">Проверить подпись</button>
+                </div>
+                <div class="result-box" id="verificationResult"></div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
-    function checkAnswer(id, correctAnswer) {
-        let inputField = document.getElementById('input-' + id);
-        let feedback = document.getElementById('feedback-' + id);
+    // --- ECC Холст ФУНКЦИИ (Интерактивное сложение точек) ---
+    const canvas = document.getElementById('eccCanvas');
+    const ctx = canvas.getContext('2d');
+    const SCALE = 30; // 1 unit = 30 pixels
+    let A = -2, B = 2;
+    let pointP = null;
+    let pointQ = null;
 
-        if (!inputField || !feedback) return;
+    // Преобразование математических координат в координаты холста
+    function toCanvas(x, y) {
+        return {
+            x: canvas.width / 2 + x * SCALE,
+            y: canvas.height / 2 - y * SCALE
+        };
+    }
 
-        let input = inputField.value.trim().toUpperCase();
+    // Преобразование координат холста в математические координаты
+    function toMath(cx, cy) {
+        return {
+            x: (cx - canvas.width / 2) / SCALE,
+            y: (canvas.height / 2 - cy) / SCALE
+        };
+    }
 
-        if (input === correctAnswer.toUpperCase()) {
-            feedback.innerHTML = "✅ Верно! Доступ получен.";
-            feedback.className = "practice-feedback feedback-correct";
+    // Рисование точки
+    function drawPoint(point, color, label) {
+        if (!point) return;
+        const c = toCanvas(point.x, point.y);
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, 5, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.fillStyle = '#111';
+        ctx.font = '14px sans-serif';
+        ctx.fillText(label, c.x + 8, c.y - 8);
+    }
+
+    // Рисование линии
+    function drawLine(p1, p2, color, thickness = 1) {
+        if (!p1 || !p2) return;
+        const c1 = toCanvas(p1.x, p1.y);
+        const c2 = toCanvas(p2.x, p2.y);
+        ctx.strokeStyle = color;
+        ctx.lineWidth = thickness;
+        ctx.beginPath();
+        ctx.moveTo(c1.x, c1.y);
+        ctx.lineTo(c2.x, c2.y);
+        ctx.stroke();
+    }
+
+    // Алгоритм сложения P + Q = R (геометрически)
+    function calculateR(P, Q) {
+        if (!P || !Q) return null;
+
+        let m;
+        if (P.x === Q.x && P.y === -Q.y) {
+            // P + (-P) = O (Точка на бесконечности)
+            return { x: Infinity, y: Infinity };
+        } else if (P.x === Q.x && P.y === Q.y) {
+            // Удвоение P (P + P)
+            // m = (3x^2 + A) / 2y
+            m = (3 * P.x * P.x + A) / (2 * P.y);
         } else {
-            feedback.innerHTML = "❌ Неверно. Попробуйте еще раз.";
-            feedback.className = "practice-feedback feedback-incorrect";
+            // Сложение P + Q
+            // m = (yQ - yP) / (xQ - xP)
+            m = (Q.y - P.y) / (Q.x - P.x);
         }
-        feedback.style.display = 'block';
+
+        // Rx = m^2 - Px - Qx
+        const Rx = m * m - P.x - Q.x;
+        // Ry = m(Px - Rx) - Py
+        const Ry = m * (P.x - Rx) - P.y;
+
+        // R - это отражение точки пересечения R' (Rx, -Ry)
+        return { x: Rx, y: Ry };
+    }
+
+    // Отрисовка кривой и всех элементов
+    function drawCurve() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Ось X, Y
+        ctx.strokeStyle = '#ccc';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(canvas.width/2, 0); ctx.lineTo(canvas.width/2, canvas.height);
+        ctx.moveTo(0, canvas.height/2); ctx.lineTo(canvas.width, canvas.height/2);
+        ctx.stroke();
+
+        // Кривая (A, B)
+        ctx.strokeStyle = '#3b82f6';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        let first = true;
+        for (let px = 0; px < canvas.width; px++) {
+            let x = (px - canvas.width/2) / SCALE;
+            let val = x*x*x + A*x + B;
+            if (val >= 0) {
+                let y = Math.sqrt(val);
+
+                // Верхняя половина
+                let py1 = canvas.height/2 - y * SCALE;
+                if (first) {
+                    ctx.moveTo(px, py1);
+                    first = false;
+                } else {
+                    ctx.lineTo(px, py1);
+                }
+            }
+        }
+        ctx.stroke();
+
+        ctx.beginPath();
+        first = true;
+        for (let px = canvas.width - 1; px >= 0; px--) {
+            let x = (px - canvas.width/2) / SCALE;
+            let val = x*x*x + A*x + B;
+            if (val >= 0) {
+                let y = Math.sqrt(val);
+
+                // Нижняя половина
+                let py2 = canvas.height/2 + y * SCALE;
+                if (first) {
+                    ctx.moveTo(px, py2);
+                    first = false;
+                } else {
+                    ctx.lineTo(px, py2);
+                }
+            }
+        }
+        ctx.stroke();
+
+        // Рисуем точки и линию сложения
+        if (pointP && pointQ) {
+            const R_prime = calculateR(pointP, pointQ); // R' - точка пересечения прямой P-Q с кривой (Rx, Ry)
+            const R_sum = { x: R_prime.x, y: -R_prime.y }; // R = P+Q (отражение R')
+
+            // 1. Линия, соединяющая P и Q (или касательная к P)
+            drawLine(pointP, pointQ, '#000000', 1);
+
+            // 2. Точка R' (пересечение с кривой)
+            if (R_prime.x !== Infinity) {
+                drawPoint(R_prime, '#F44336', 'R\'');
+                // 3. Линия отражения (R' -> R)
+                drawLine(R_prime, R_sum, '#555555', 1);
+                // 4. Конечная точка R = P+Q
+                drawPoint(R_sum, '#F44336', 'P+Q');
+            }
+
+            document.getElementById('pointR').innerText = `(${R_sum.x.toFixed(2)}, ${R_sum.y.toFixed(2)})`;
+            document.getElementById('statusMsg').innerText = `Сложение: P(${pointP.x.toFixed(2)}, ${pointP.y.toFixed(2)}) + Q(${pointQ.x.toFixed(2)}, ${pointQ.y.toFixed(2)}) = R(${R_sum.x.toFixed(2)}, ${R_sum.y.toFixed(2)})`;
+
+        }
+
+        drawPoint(pointP, 'var(--accent-flower)', 'P'); // Точка P (Фиолетовая)
+        drawPoint(pointQ, 'var(--accent-leaf)', 'Q'); // Точка Q (Зеленая)
+    }
+
+    // Обработчик клика по холсту для выбора точек
+    function handleInput(event) {
+        const rect = canvas.getBoundingClientRect();
+        const cx = event.clientX - rect.left;
+        const cy = event.clientY - rect.top;
+        const mathPoint = toMath(cx, cy);
+
+        // Поиск ближайшей точки на кривой
+        let bestPoint = null;
+        let minDistance = Infinity;
+
+        for (let x_test = -canvas.width/(2*SCALE); x_test <= canvas.width/(2*SCALE); x_test += 0.05) {
+            let val = x_test*x_test*x_test + A*x_test + B;
+            if (val >= 0) {
+                let y1 = Math.sqrt(val);
+                let y2 = -y1;
+
+                // Проверяем верхнюю и нижнюю половину
+                [[x_test, y1], [x_test, y2]].forEach(([x, y]) => {
+                    const dist = Math.sqrt((x - mathPoint.x)**2 + (y - mathPoint.y)**2);
+                    if (dist < minDistance && dist < 0.5) { // Проверяем, что точка достаточно близко
+                        minDistance = dist;
+                        bestPoint = {x: x, y: y};
+                    }
+                });
+            }
+        }
+
+        if (bestPoint) {
+            if (!pointP) {
+                pointP = bestPoint;
+                document.getElementById('pointP').innerText = `(${pointP.x.toFixed(2)}, ${pointP.y.toFixed(2)})`;
+                document.getElementById('statusMsg').innerText = "Точка P выбрана. Выберите точку Q.";
+            } else if (!pointQ) {
+                pointQ = bestPoint;
+                document.getElementById('pointQ').innerText = `(${pointQ.x.toFixed(2)}, ${pointQ.y.toFixed(2)})`;
+                document.getElementById('statusMsg').innerText = "Точка Q выбрана. Результат R = P + Q показан красным.";
+            } else {
+                resetCanvas();
+                pointP = bestPoint;
+                document.getElementById('pointP').innerText = `(${pointP.x.toFixed(2)}, ${pointP.y.toFixed(2)})`;
+                document.getElementById('statusMsg').innerText = "Сброшено. Точка P выбрана. Выберите точку Q.";
+            }
+            drawCurve();
+        } else {
+            document.getElementById('statusMsg').innerText = "Ошибка: Нажмите ближе к кривой.";
+        }
+    }
+
+    // Сброс состояния холста
+    function resetCanvas() {
+        pointP = null;
+        pointQ = null;
+        document.getElementById('pointP').innerText = '(?, ?)';
+        document.getElementById('pointQ').innerText = '(?, ?)';
+        document.getElementById('pointR').innerText = '(?, ?)';
+        document.getElementById('statusMsg').innerText = "Сброшено. Нажмите на кривую, чтобы выбрать точку P.";
+        drawCurve();
+    }
+
+    // Инициализация холста и обработчики ввода
+    document.getElementById('paramA').oninput = function() { A = parseFloat(this.value); document.getElementById('valA').innerText = A; resetCanvas(); };
+    document.getElementById('paramB').oninput = function() { B = parseFloat(this.value); document.getElementById('valB').innerText = B; resetCanvas(); };
+    canvas.addEventListener('click', handleInput);
+
+    document.getElementById('valA').innerText = A;
+    document.getElementById('valB').innerText = B;
+    drawCurve();
+
+
+    // --- ECDH/ECDSA ФУНКЦИИ (Работа в конечном поле GF(p)) ---
+
+    // Параметры тестовой кривой: Y^2 = X^3 + 2X + 1 (mod 17)
+    const p = 17; // Порядок поля
+    const G = { x: 5, y: 1 }; // Базовая точка
+    const A_param = 2; // Коэффициент A для модульной кривой
+    const B_param = 1; // Коэффициент B для модульной кривой
+
+    // Вспомогательная функция для взятия остатка по модулю
+    function mod(n, m) {
+        return ((n % m) + m) % m;
+    }
+
+    // Расширенный алгоритм Евклида для поиска обратного элемента (a^-1 mod p)
+    function inverse(a, m) {
+        if (a === 0) return 0;
+        let m0 = m;
+        let x0 = 0;
+        let x1 = 1;
+        a = mod(a, m);
+
+        while (a > 1) {
+            let q = Math.floor(m / a);
+            let t = m % a;
+            m = a;
+            a = t;
+            t = x0 - q * x1;
+            x0 = x1;
+            x1 = t;
+        }
+        return mod(x1, m0);
+    }
+
+    // Сложение точек P + Q (по модулю p)
+    function addPoints(P, Q) {
+        if (P === null) return Q;
+        if (Q === null) return P;
+
+        let m;
+        if (P.x === Q.x && mod(P.y + Q.y, p) === 0) {
+            // P + (-P) = Точка на бесконечности (O)
+            return null;
+        } else if (P.x === Q.x && P.y === Q.y) {
+            // Удвоение P: m = (3x^2 + A) * (2y)^-1 mod p
+            const numerator = mod(3 * P.x * P.x + A_param, p);
+            const denominator = mod(2 * P.y, p);
+            m = mod(numerator * inverse(denominator, p), p);
+        } else {
+            // P + Q: m = (yQ - yP) * (xQ - xP)^-1 mod p
+            const numerator = mod(Q.y - P.y, p);
+            const denominator = mod(Q.x - P.x, p);
+            m = mod(numerator * inverse(denominator, p), p);
+        }
+
+        // Rx = m^2 - Px - Qx mod p
+        const Rx = mod(m * m - P.x - Q.x, p);
+        // Ry = m * (P.x - Rx) - P.y mod p
+        const Ry = mod(m * (P.x - Rx) - P.y, p);
+
+        return { x: Rx, y: Ry };
+    }
+
+    // Умножение точки на скаляр: k * G (используя Double and Add)
+    function multiplyPoint(k, P) {
+        let result = null;
+        let current = P;
+
+        let i = k;
+        while (i > 0) {
+            if (mod(i, 2) === 1) {
+                result = addPoints(result, current);
+            }
+            current = addPoints(current, current); // Удвоение
+            i = Math.floor(i / 2);
+        }
+        return result;
+    }
+
+    // --- ECDH ФУНКЦИИ ---
+
+    let P_A = null; // Публичный ключ Алисы
+    let P_B = null; // Публичный ключ Боба
+
+    function displayPoint(point) {
+        if (point) {
+            return `(${point.x}, ${point.y})`;
+        }
+        return 'O (бесконечность)';
+    }
+
+    // Генерация публичного ключа P = d * G
+    function generateKeys(user) {
+        const privateKeyInput = document.getElementById(user === 'A' ? 'alicePrivate' : 'bobPrivate');
+        const publicKeyDiv = document.getElementById(user === 'A' ? 'alicePublic' : 'bobPublic');
+
+        const d = parseInt(privateKeyInput.value);
+        if (isNaN(d) || d < 1 || d >= p) {
+            publicKeyDiv.innerHTML = `<span style="color: var(--error);">Ошибка: d должен быть в диапазоне 1..${p - 1}.</span>`;
+            if (user === 'A') P_A = null; else P_B = null;
+            return;
+        }
+
+        const P = multiplyPoint(d, G);
+
+        if (user === 'A') {
+            P_A = P;
+            document.getElementById('ecdsaPublic').value = displayPoint(P); // Обновляем для ECDSA
+        } else {
+            P_B = P;
+        }
+
+        publicKeyDiv.innerHTML = `
+            1. Приватный ключ $d_${user}$ = ${d}
+            2. Публичный ключ $P_${user}$ = $d_${user} \cdot G$
+            3. Результат $P_${user}$ = ${displayPoint(P)}
+        `;
+        MathJax.typeset(); // Обновление формул MathJax
+    }
+
+    // Вычисление общего секрета K = d_A * P_B = d_B * P_A
+    function calculateSharedSecret() {
+        if (!P_A || !P_B) {
+            document.getElementById('sharedSecret').innerHTML = `<span style="color: var(--error);">Ошибка: Сначала сгенерируйте ключи Алисы и Боба.</span>`;
+            return;
+        }
+
+        const dA = parseInt(document.getElementById('alicePrivate').value);
+        const dB = parseInt(document.getElementById('bobPrivate').value);
+
+        // K_A = dA * P_B
+        const KA = multiplyPoint(dA, P_B);
+        // K_B = dB * P_A
+        const KB = multiplyPoint(dB, P_A);
+
+        let resultHTML;
+        if (KA && KB && KA.x === KB.x && KA.y === KB.y) {
+            resultHTML = `
+                <span style="color: var(--success);">Секрет успешно установлен!</span><br>
+                K_A = $d_A \cdot P_B$ = ${displayPoint(KA)}<br>
+                K_B = $d_B \cdot P_A$ = ${displayPoint(KB)}<br>
+                <strong>Общий секрет K: ${displayPoint(KA)}</strong>
+            `;
+        } else {
+            resultHTML = `<span style="color: var(--error);">Ошибка: Общие ключи не совпали.</span>`;
+        }
+
+        document.getElementById('sharedSecret').innerHTML = resultHTML;
+        MathJax.typeset();
+    }
+
+    // --- ECDSA ФУНКЦИИ ---
+
+    // Упрощенная функция хэширования (для demo)
+    function simpleHash(msg) {
+        let hash = 0;
+        for (let i = 0; i < msg.length; i++) {
+            hash = (hash + msg.charCodeAt(i)) % (p - 1);
+        }
+        // Хэш должен быть числом, меньшим порядка кривой (1..16).
+        return hash + 1;
+    }
+
+    // Генерация подписи
+    function generateSignature() {
+        const d = parseInt(document.getElementById('ecdsaPrivate').value);
+        const msg = document.getElementById('message').value;
+        const resultDiv = document.getElementById('signatureResult');
+
+        if (isNaN(d) || d < 1 || d >= p) {
+            resultDiv.innerHTML = `<span style="color: var(--error);">Ошибка: Неверный приватный ключ.</span>`;
+            return;
+        }
+
+        // 1. Выбираем случайное k (nonce). Берем фиксированное k=3 для детерминизма.
+        const k = 3;
+        const k_inv = inverse(k, p);
+
+        // 2. Вычисляем R = k * G
+        const R_point = multiplyPoint(k, G);
+        const r = mod(R_point.x, p);
+
+        // 3. Вычисляем e (хэш сообщения)
+        const e = simpleHash(msg);
+
+        // 4. Вычисляем s = k^-1 * (e + r * d) mod p
+        const s_numerator = mod(e + r * d, p);
+        const s = mod(k_inv * s_numerator, p);
+
+        if (r === 0 || s === 0) {
+            resultDiv.innerHTML = `<span style="color: var(--error);">Ошибка: r или s равно нулю. Повторите с другим k (в реальном приложении).</span>`;
+            return;
+        }
+
+        document.getElementById('verifyR').value = r;
+        document.getElementById('verifyS').value = s;
+
+        resultDiv.className = "result-box success";
+        resultDiv.innerHTML = `
+            ✅ Подпись создана.<br>
+            d (Приватный): ${d}<br>
+            e (Хэш): ${e}<br>
+            k (Nonce): ${k}<br>
+            R = kG: ${displayPoint(R_point)}<br>
+            Подпись (r, s): <strong>(${r}, ${s})</strong>
+        `;
+    }
+
+    // Проверка подписи
+    function verifySignature() {
+        const PA_input = document.getElementById('ecdsaPublic').value;
+        const r = parseInt(document.getElementById('verifyR').value);
+        const s = parseInt(document.getElementById('verifyS').value);
+        const msg = document.getElementById('message').value;
+        const resultDiv = document.getElementById('verificationResult');
+
+        if (!PA_input || isNaN(r) || isNaN(s) || r < 1 || s < 1) {
+            resultDiv.className = "result-box error";
+            resultDiv.innerHTML = "❌ Ошибка: Введите все данные (публичный ключ, r, s).";
+            return;
+        }
+
+        // Парсинг публичного ключа P_A(x, y)
+        const match = PA_input.match(/\((\d+),\s*(\d+)\)/);
+        if (!match) {
+             resultDiv.className = "result-box error";
+             resultDiv.innerHTML = "❌ Ошибка: Неверный формат публичного ключа P_A.";
+             return;
+        }
+        const P_A_verify = { x: parseInt(match[1]), y: parseInt(match[2]) };
+
+        // 1. Проверка r, s в диапазоне [1, p-1]
+        if (r < 1 || r >= p || s < 1 || s >= p) {
+            resultDiv.className = "result-box error";
+            resultDiv.innerHTML = "❌ Подпись недействительна: r или s вне диапазона.";
+            return;
+        }
+
+        // 2. Вычисляем e (хэш сообщения)
+        const e = simpleHash(msg);
+
+        // 3. Вычисляем w = s^-1 mod p
+        const w = inverse(s, p);
+
+        // 4. Вычисляем u1 = e * w mod p
+        const u1 = mod(e * w, p);
+
+        // 5. Вычисляем u2 = r * w mod p
+        const u2 = mod(r * w, p);
+
+        // 6. Вычисляем точку X = u1*G + u2*P_A
+        const u1G = multiplyPoint(u1, G);
+        const u2PA = multiplyPoint(u2, P_A_verify);
+        const X = addPoints(u1G, u2PA);
+
+        // 7. Проверка: v = X.x mod p. Если v == r, подпись верна.
+        const v = mod(X.x, p);
+
+        let verificationMsg;
+        if (v === r) {
+            resultDiv.className = "result-box success";
+            verificationMsg = "✅ ПОДПИСЬ ДЕЙСТВИТЕЛЬНА (r == v)";
+        } else {
+            resultDiv.className = "result-box error";
+            verificationMsg = "❌ ПОДПИСЬ НЕВЕРНА (r != v)";
+        }
+
+        resultDiv.innerHTML = `
+            ${verificationMsg}<br>
+            e (Хэш): ${e}<br>
+            w (s^-1): ${w}<br>
+            u1*G: ${displayPoint(u1G)}<br>
+            u2*PA: ${displayPoint(u2PA)}<br>
+            v (X.x): ${v}, r (Подпись): ${r}
+        `;
+        MathJax.typeset();
     }
 </script>
 {% endblock %}
