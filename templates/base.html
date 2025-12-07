@@ -5,19 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}CryptoDetective{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/mathjs@12.4.0/lib/browser/math.min.js"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
     <nav>
-        <div class="logo">🔐 CryptoDetective</div>
+        <div class="logo">🥀 CryptoDetective</div>
         <ul>
-            <li><a href="{{ url_for('index') }}">Главная</a></li>
+            <li><a href="{{ url_for('index') }}">Теория</a></li>
             <li><a href="{{ url_for('cases') }}">Сферы</a></li>
             <li><a href="{{ url_for('detective') }}">Детектив</a></li>
-            <!-- Ссылка нормального цвета (убран inline style color) -->
-            <li><a href="{{ url_for('practice') }}" style="color: var(--accent-leaf);">Лаборатория</a></li>
-            <li><a href="{{ url_for('facts') }}" style="color: var(--highlight);">Секреты</a></li>
+            <li><a href="{{ url_for('practice') }}" style="color: var(--accent-leaf);">🧪 Лаборатория</a></li>
+            <li><a href="{{ url_for('facts') }}" style="color: #D4A5A5;">🔒 Секреты</a></li>
         </ul>
     </nav>
 
@@ -26,7 +26,7 @@
     </div>
 
     <footer>
-        <p>Криптография защищает каждого. <br> Изучай, чтобы понимать.</p>
+        <p>Написано на Python. Исследовано людьми.</p>
     </footer>
 </body>
 </html>
