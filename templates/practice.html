@@ -13,8 +13,8 @@
 <!-- 1. ИНТЕРАКТИВНЫЙ ХОЛСТ -->
 <div class="card" style="border-left-color: var(--accent-flower); margin-bottom: 40px;">
     <h2>1. Геометрия сложения точек (P + Q)</h2>
-    <p>Нажмите на кривую, чтобы выбрать $P$, затем $Q$. Третья точка — результат операции.</p>
-    
+    <p>Нажмите на кривую, чтобы выбрать P, затем Q. Третья точка — результат операции.</p>
+
     <div style="display: flex; gap: 20px; flex-wrap: wrap; margin: 20px 0;">
         <div style="flex: 1;">
             <label style="color: var(--accent-flower);">Коэффициент a: <span id="valA"></span></label>
@@ -50,11 +50,11 @@
     <h2>2. ECDH: Обмен Ключами Диффи-Хеллмана на ЭК</h2>
     <p>Протокол, позволяющий Алисе и Бобу создать общий секретный ключ по открытому каналу.</p>
     <div class="math-block" style="margin-top: 10px; margin-bottom: 10px; text-align: center;">
-        $$\text{Общий ключ} = \text{Приватный ключ Алисы} \cdot \text{Публичный ключ Боба}$$
+        Общий ключ = Приватный ключ Алисы * Публичный ключ Боба
         <br>
-        $$\text{Общий ключ} = \text{Приватный ключ Боба} \cdot \text{Публичный ключ Алисы}$$
+        Общий ключ = Приватный ключ Боба * Публичный ключ Алисы
     </div>
-    <p style="color: var(--accent-flower);">* Используется простая кривая для демонстрации: $y^2 = x^3 + 2x + 1 \pmod{17}$. Базовая точка $G(5, 1)$</p>
+    <p style="color: var(--accent-flower);">* Используется простая кривая для демонстрации: y^2 = x^3 + 2x + 1 (mod 17). Базовая точка G(5, 1)</p>
 
     <div class="interactive-panel" style="margin-top: 20px;">
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
@@ -62,21 +62,21 @@
             <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;">
                 <h3>Алиса (Alice)</h3>
                 <div class="input-group">
-                    <label for="alicePrivate">Приватный ключ $d_A$ (число 1..16):</label>
+                    <label for="alicePrivate">Приватный ключ dA (число 1..16):</label>
                     <input type="number" id="alicePrivate" value="10" min="1" max="16" style="width: 100%; padding: 8px; margin-bottom: 10px; background: #0f172a; color: white; border: 1px solid #334155;">
                     <button onclick="generateKeys('A')" class="btn" style="background: var(--accent-flower); width: 100%;">Генерировать ключи</button>
                 </div>
-                <div class="result-box" id="alicePublic" style="margin-top:10px; color: #94a3b8;">Публичный ключ $P_A$: ?</div>
+                <div class="result-box" id="alicePublic" style="margin-top:10px; color: #94a3b8;">Публичный ключ PA: ?</div>
             </div>
             <!-- Боб -->
             <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;">
                 <h3>Боб (Bob)</h3>
                 <div class="input-group">
-                    <label for="bobPrivate">Приватный ключ $d_B$ (число 1..16):</label>
+                    <label for="bobPrivate">Приватный ключ dB (число 1..16):</label>
                     <input type="number" id="bobPrivate" value="7" min="1" max="16" style="width: 100%; padding: 8px; margin-bottom: 10px; background: #0f172a; color: white; border: 1px solid #334155;">
                     <button onclick="generateKeys('B')" class="btn" style="background: var(--accent-flower); width: 100%;">Генерировать ключи</button>
                 </div>
-                <div class="result-box" id="bobPublic" style="margin-top:10px; color: #94a3b8;">Публичный ключ $P_B$: ?</div>
+                <div class="result-box" id="bobPublic" style="margin-top:10px; color: #94a3b8;">Публичный ключ PB: ?</div>
             </div>
         </div>
 
@@ -91,14 +91,14 @@
 <div class="card" style="border-left-color: #f59e0b;">
     <h2>3. ECDSA: Цифровая подпись</h2>
     <p>Создание и проверка подписи для сообщения, гарантирующее его подлинность и целостность.</p>
-    
+
     <div class="interactive-panel" style="margin-top: 20px;">
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
             <!-- Подписание -->
             <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;">
                 <h3>Подписание (Алиса)</h3>
                 <div class="input-group">
-                     <label for="ecdsaPrivate">Приватный ключ $d_A$ (1..16):</label>
+                     <label for="ecdsaPrivate">Приватный ключ dA (1..16):</label>
                      <input type="number" id="ecdsaPrivate" value="10" min="1" max="16" style="width: 100%; padding: 8px; margin-bottom: 10px; background: #0f172a; color: white; border: 1px solid #334155;">
                      <label for="message">Сообщение (Message):</label>
                      <textarea id="message" rows="2" style="width: 100%; padding: 8px; background: #0f172a; color: white; border: 1px solid #334155; border-radius: 6px; margin-bottom: 10px;">Тайное послание для Боба.</textarea>
@@ -110,7 +110,7 @@
             <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;">
                 <h3>Проверка (Боб)</h3>
                 <div class="input-group">
-                    <label for="ecdsaPublic">Публичный ключ $P_A$ (для проверки):</label>
+                    <label for="ecdsaPublic">Публичный ключ PA (для проверки):</label>
                     <input type="text" id="ecdsaPublic" placeholder="PA(x, y)" style="width: 100%; padding: 8px; background: #334155; color: #94a3b8; border: 1px solid #475569; margin-bottom: 10px;" readonly>
                     <div style="display: flex; gap: 10px; margin-bottom: 10px;">
                         <input type="text" id="verifyR" placeholder="r" style="flex: 1; padding: 8px; background: #0f172a; color: white; border: 1px solid #334155;">
@@ -126,8 +126,8 @@
 
 <script>
     // --- ПАРАМЕТРЫ КРИВОЙ ДЛЯ ECDH/ECDSA ---
-    const p = 17;     // Модуль поля
-    const n = 19;     // Порядок группы для y^2 = x^3 + 2x + 2
+    const p = 17;
+    const n = 19;
     const G = { x: 5, y: 1 };
     const A_param = 2;
     const B_param = 2;
@@ -160,7 +160,7 @@
     function multiplyPoint(k, P) {
         let result = null;
         let current = P;
-        let k_mod = mod(k, n); // Скалярные операции идут по модулю порядка n
+        let k_mod = mod(k, n);
         while (k_mod > 0) {
             if (k_mod % 2 === 1) result = addPoints(result, current);
             current = addPoints(current, current);
@@ -172,7 +172,7 @@
     // --- ГРАФИК ---
     const canvas = document.getElementById('eccCanvas');
     const ctx = canvas.getContext('2d');
-    const SCALE = 50; 
+    const SCALE = 50;
     let A = -3, B = 3;
     let pointP = null, pointQ = null;
 
@@ -188,6 +188,15 @@
             x: (cx - canvas.width / 2) / SCALE,
             y: (canvas.height / 2 - cy) / SCALE
         };
+    }
+
+    function findRealRoots() {
+        // Находим крайнюю левую точку x, где x^3 + Ax + B >= 0
+        // Для визуализации ищем корень численно или простым сканированием
+        for (let x = -10; x < 10; x += 0.01) {
+            if (x*x*x + A*x + B >= 0) return x;
+        }
+        return -5;
     }
 
     function drawGrid() {
@@ -212,31 +221,37 @@
 
         ctx.strokeStyle = "#38bdf8";
         ctx.lineWidth = 3;
-        
-        // Рисуем единым контуром для соединения посередине
+        ctx.lineJoin = "round";
+
+        const startX = findRealRoots();
+        const endX = (canvas.width / 2) / SCALE;
+
         ctx.beginPath();
-        let points = [];
-        
-        // Сканируем X слева направо
-        for (let i = 0; i < canvas.width; i++) {
-            let x = (i - canvas.width/2) / SCALE;
+
+        // Рисуем верхнюю ветвь от кончика влево-направо
+        let first = true;
+        for (let x = startX; x <= endX; x += 0.01) {
             let rhs = x*x*x + A*x + B;
             if (rhs >= 0) {
                 let y = Math.sqrt(rhs);
-                points.push({x: i, y: canvas.height/2 - y * SCALE});
+                let c = toCanvas(x, y);
+                if (first) { ctx.moveTo(c.x, c.y); first = false; }
+                else { ctx.lineTo(c.x, c.y); }
             }
         }
-        
-        // Рисуем верхнюю часть
-        if(points.length > 0) ctx.moveTo(points[0].x, points[0].y);
-        for(let p of points) ctx.lineTo(p.x, p.y);
-        
-        // Рисуем нижнюю часть в обратном порядке для замыкания в точке разворота
-        for(let i = points.length - 1; i >= 0; i--) {
-            let x = (points[i].x - canvas.width/2) / SCALE;
+
+        // Рисуем нижнюю ветвь в обратном порядке, чтобы линия была непрерывной
+        for (let x = endX; x >= startX; x -= 0.01) {
             let rhs = x*x*x + A*x + B;
-            ctx.lineTo(points[i].x, canvas.height/2 + Math.sqrt(rhs) * SCALE);
+            if (rhs >= 0) {
+                let y = -Math.sqrt(rhs);
+                let c = toCanvas(x, y);
+                ctx.lineTo(c.x, c.y);
+            }
         }
+
+        // Замыкаем в начальной точке (вершине), если нужно
+        ctx.closePath();
         ctx.stroke();
 
         if (pointP && pointQ) drawAddition();
@@ -297,9 +312,8 @@
     canvas.addEventListener('mousedown', (e) => {
         const rect = canvas.getBoundingClientRect();
         const mouse = toMath(e.clientX - rect.left, e.clientY - rect.top);
-        
+
         let bestPoint = null, minDist = 0.5;
-        // Сканирование с микро-шагом для идеальной точности
         for(let x = mouse.x - 0.5; x <= mouse.x + 0.5; x += 0.001) {
             let rhs = x*x*x + A*x + B;
             if (rhs >= 0) {
@@ -335,15 +349,15 @@
         drawCurve();
     }
 
-    document.getElementById('paramA').oninput = (e) => { 
-        A = parseFloat(e.target.value); 
-        document.getElementById('valA').innerText = A; 
-        resetCanvas(); 
+    document.getElementById('paramA').oninput = (e) => {
+        A = parseFloat(e.target.value);
+        document.getElementById('valA').innerText = A;
+        resetCanvas();
     };
-    document.getElementById('paramB').oninput = (e) => { 
-        B = parseFloat(e.target.value); 
-        document.getElementById('valB').innerText = B; 
-        resetCanvas(); 
+    document.getElementById('paramB').oninput = (e) => {
+        B = parseFloat(e.target.value);
+        document.getElementById('valB').innerText = B;
+        resetCanvas();
     };
 
     // --- ECDH ФУНКЦИИ ---
@@ -352,19 +366,17 @@
     function generateKeys(user) {
         const d = parseInt(document.getElementById(user === 'A' ? 'alicePrivate' : 'bobPrivate').value);
         const P = multiplyPoint(d, G);
-        
         const displayPoint = P ? `(${P.x}, ${P.y})` : "O";
 
         if (user === 'A') {
             P_A = P;
-            document.getElementById('alicePublic').innerText = `Публичный ключ $P_A$: ${displayPoint}`;
+            document.getElementById('alicePublic').innerText = `Публичный ключ PA: ${displayPoint}`;
             if(P) document.getElementById('ecdsaPublic').value = `(${P.x}, ${P.y})`;
             document.getElementById('ecdsaPrivate').value = d;
         } else {
             P_B = P;
-            document.getElementById('bobPublic').innerText = `Публичный ключ $P_B$: ${displayPoint}`;
+            document.getElementById('bobPublic').innerText = `Публичный ключ PB: ${displayPoint}`;
         }
-        MathJax.typeset();
     }
 
     function calculateSharedSecret() {
@@ -385,11 +397,11 @@
     function generateSignature() {
         const d = parseInt(document.getElementById('ecdsaPrivate').value);
         if (!d) return alert("Сгенерируйте ключи Алисы выше!");
-        
+
         const msg = document.getElementById('message').value;
         const e = simpleHash(msg);
-        const k = 3; 
-        
+        const k = 3;
+
         const R_point = multiplyPoint(k, G);
         const r = mod(R_point.x, n);
         const s = mod(inverse(k, n) * (e + r * d), n);
@@ -409,12 +421,12 @@
 
         const coords = pubStr.match(/\d+/g);
         const PA = { x: parseInt(coords[0]), y: parseInt(coords[1]) };
-        
+
         const e = simpleHash(msg);
         const w = inverse(s, n);
         const u1 = mod(e * w, n);
         const u2 = mod(r * w, n);
-        
+
         const X = addPoints(multiplyPoint(u1, G), multiplyPoint(u2, PA));
         const resDiv = document.getElementById('verificationResult');
 
@@ -427,22 +439,15 @@
         }
     }
 
-    // Инициализация
     window.onload = () => {
         canvas.width = canvas.offsetWidth;
         canvas.height = canvas.offsetHeight;
         drawCurve();
-        
+
         document.getElementById('valA').innerText = A;
         document.getElementById('valB').innerText = B;
-        
-        document.getElementById('alicePriv').oninput = updateDH;
-        document.getElementById('bobPriv').oninput = updateDH;
     };
-    
-    // Вспомогательная для ECDH
-    function updateDH() {
-        // Заглушка, если нужно будет добавить динамическое обновление
-    }
+
+    function updateDH() {}
 </script>
 {% endblock %}
